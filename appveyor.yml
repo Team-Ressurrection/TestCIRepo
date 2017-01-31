@@ -1,0 +1,35 @@
+version: 1.0.{build}
+branches:
+  only:
+  - master
+configuration: Release
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+platform:
+  - x64
+  - Any CPU
+matrix:
+  allow_failures:
+    - platform: Any CPU
+      configuration: Release
+    - platform: x64
+      configuration: Release
+before_build:
+  - ps: nuget restore .\WebApplication1\WebApplication1.sln
+build:
+  project: .\WebApplication1\WebApplication1.sln
+  verbosity: minimal
+notifications:
+  - provider: Email
+    to:
+    - nestorov.alexander@gmail.com
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: ig7j7rMbwuoEVu3h03ij9T3DHsvUaN6Go
